@@ -1,8 +1,45 @@
 ---
-- name: Set hostname
-  hostname:
-    name: "{{ hostname_override }}"
-  when: hostname_override is defined
+# FIXME begin a quick-and-dirty placeholder for a better solution
+- name: check server hostname
+  become: yes
+  shell: grep -Fq '{{ inventory_hostname }}' /etc/hostname
+  args:
+    executable: /bin/bash
+  register: hostname_check
+
+- name: set server hostname
+  become: yes
+  shell: "hostname {{ inventory_hostname }}"
+  args:
+    executable: /bin/bash
+  when:
+    - hostname_check.rc != 0
+# FIXME end a quick-and-dirty placeholder for a better solution
+
+- name: set PS1 variable
+  lineinfile:
+    path: "{{ ansible_env['HOME'] }}/.bashrc"
+    state: present
+    line: "export PS1=$'[\\j \\u@\\H (\\!:\\#) \\w]\\$ '"
+    create: yes
+    regexp: '^export\s+PS1'
+
+- name: only update apt
+  become: yes
+  apt:
+    update_cache: yes
+  tags:
+    - apt-update
+
+- name: update and upgrade apt
+  become: yes
+  apt:
+    upgrade: safe
+  tags:
+    - apt-upgrade
+  when:
+    - upgrade_apt is defined
+    - upgrade_apt|bool
 
 # May change due to https://github.com/ansible/ansible-modules-core/issues/3523
 - name: Install aptitude
@@ -18,7 +55,6 @@
   notify:
     - Restart cron
 
-# Not sure if needed
 - name: Set localtime to UTC
   file:
     src: /usr/share/zoneinfo/Etc/UTC
