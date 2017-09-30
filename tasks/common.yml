@@ -16,7 +16,6 @@
   when:
     - ansible_env == 'ec2'
     - hostname_check.rc != 0
-    
 # FIXME end a quick-and-dirty placeholder for a better solution
 
 - name: Change server host name
