@@ -1,9 +1,11 @@
 ---
 - hosts: local
   connection: local
-  set_fact:
-      py_env: "{{ lookup('PY_ENV', 'travis' }}"
   vars_files:
     - example-vars.yml
   roles:
-    - ansible-role-common
+      - role: ansible-role-common
+        vars:
+          set_fact:
+            ansible_env: "{{ lookup('ANSIBLE_ENV', 'ec2' }}"
+

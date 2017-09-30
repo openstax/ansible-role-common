@@ -6,7 +6,7 @@
   args:
     executable: /bin/bash
   register: hostname_check
-  when: pyenv == 'ec2'
+  when: ansible_env == 'ec2'
 
 - name: set ec2 server hostname
   become: yes
@@ -14,14 +14,15 @@
   args:
     executable: /bin/bash
   when:
+    - ansible_env == 'ec2'
     - hostname_check.rc != 0
-    - pyenv == 'ec2'
+    
 # FIXME end a quick-and-dirty placeholder for a better solution
 
 - name: Change server host name
   hostname:
     name: "{{ inventory_hostname }}"
-  when: pyenv != 'ec2'
+  when: ansible_env != 'ec2'
 
 - name: set PS1 variable
   lineinfile:
