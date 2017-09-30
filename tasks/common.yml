@@ -1,20 +1,27 @@
 ---
 # FIXME begin a quick-and-dirty placeholder for a better solution
-- name: check server hostname
+- name: check ec2 server hostname
   become: yes
   shell: grep -Fq '{{ inventory_hostname }}' /etc/hostname
   args:
     executable: /bin/bash
   register: hostname_check
+  when: pyenv == 'ec2'
 
-- name: set server hostname
+- name: set ec2 server hostname
   become: yes
   shell: "hostname {{ inventory_hostname }}"
   args:
     executable: /bin/bash
   when:
     - hostname_check.rc != 0
+    - pyenv == 'ec2'
 # FIXME end a quick-and-dirty placeholder for a better solution
+
+- name: Change server host name
+  hostname:
+    name: "{{ inventory_hostname }}"
+  when: pyenv != 'ec2'
 
 - name: set PS1 variable
   lineinfile:
