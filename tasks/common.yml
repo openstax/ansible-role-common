@@ -20,7 +20,7 @@
 
 - name: Change server host name
   hostname:
-    name: "{{ inventory_hostname }}"
+    name: "{{ inventory_hostname | string() }}"
   when: ansible_env != 'ec2'
 
 - name: set PS1 variable
