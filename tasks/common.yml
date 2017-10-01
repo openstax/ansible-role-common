@@ -18,11 +18,6 @@
     - hostname_check.rc != 0
 # FIXME end a quick-and-dirty placeholder for a better solution
 
-- name: Change server host name
-  hostname:
-    name: "{{ inventory_hostname | string() }}"
-  when: ansible_env != 'ec2'
-
 - name: set PS1 variable
   lineinfile:
     path: "{{ ansible_env['HOME'] }}/.bashrc"
