@@ -28,7 +28,7 @@
 
 - name: install python3 apt
   become: yes
-  apt: 
+  apt:
     name: python3-apt
   tags:
     - python3-apt
