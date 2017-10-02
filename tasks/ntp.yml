@@ -5,6 +5,7 @@
     state: latest
 
 - name: Copy the ntp.conf file
+  become: yes
   template:
     src: etc/ntp.conf.j2
     dest: /etc/ntp.conf

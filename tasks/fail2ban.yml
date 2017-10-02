@@ -1,5 +1,6 @@
 ---
 - name: Install fail2ban
+  become: yes
   apt:
     pkg: fail2ban
     state: latest
@@ -7,6 +8,7 @@
     - restart fail2ban
 
 - name: Configure fail2ban
+  become: yes
   template:
     src: "{{ item }}.j2"
     dest: "/{{ item }}"
