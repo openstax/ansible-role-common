@@ -72,6 +72,7 @@
     - Restart cron
 
 - name: Install base packages
+  become: yes
   apt:
     pkg: "{{ item }}"
     state: latest
